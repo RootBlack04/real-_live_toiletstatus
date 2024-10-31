@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .occupied {
+            color: red;
+        }
+
+        .available {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Toilet Availability</h1>
+    <div id="toiletStatus" class="available">Loading...</div>
+    <button onclick="toggleStatus()">Toggle Status</button>
+
+    <script>
+        async function fetchStatus() {
+            const response = await fetch('/status');
+            const data = await response.json();
+            const statusDiv = document.getElementById("toiletStatus");
+            statusDiv.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+            statusDiv.className = data.status;
+        }
+
+        async function toggleStatus() {
+            const response = await fetch('/toggle', { method: 'POST' });
+            const data = await response.json();
+            const statusDiv = document.getElementById("toiletStatus");
+            statusDiv.textContent = data.status.charAt(0).toUpperCase() + data.status.slice(1);
+            statusDiv.className = data.status;
+        }
+
+        fetchStatus();
+        setInterval(fetchStatus, 5000);
+    </script>
+</body>
+
+</html>
